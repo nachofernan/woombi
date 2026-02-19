@@ -29,6 +29,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'total_points',
+        'role',
     ];
 
     /**
@@ -62,6 +64,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'total_points' => 'integer',
+            'role' => 'string',
         ];
     }
+
+    public function predictions() { return $this->hasMany(Prediction::class); }
+    public function groups() { return $this->belongsToMany(Group::class)->withPivot('total_points'); }
+    public function ownedGroups() { return $this->hasMany(Group::class, 'owner_id'); }
 }

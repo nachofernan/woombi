@@ -15,3 +15,8 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/docs/ApiDocumentation.md', function () {
+    return response()->download(base_path('docs/ApiDocumentation.md'));
+})->name('downloadDocs');
+

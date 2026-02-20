@@ -253,6 +253,7 @@ Devuelve todas las predicciones del usuario autenticado, incluyendo datos del pa
     "match_id": 1,
     "predicted_home_score": null,
     "predicted_away_score": null,
+    "predicted_winner_team_id": null,
     "points": null,
     "match": {
       "id": 1,
@@ -282,13 +283,16 @@ Carga o actualiza la predicción del usuario para un partido específico. Usa up
 ```json
 {
   "predicted_home_score": 2,
-  "predicted_away_score": 1
+  "predicted_away_score": 1,
+  "predicted_winner_team_id": null
 }
 ```
 
 **Validación:**
-- Ambos campos son requeridos
-- Deben ser enteros entre 0 y 20
+- `predicted_home_score` y `predicted_away_score`: requeridos, enteros entre 0 y 20
+- `predicted_winner_team_id`: opcional, ID válido de un equipo. En partidos de eliminatorias donde el usuario predice empate, se usa para determinar quién gana en penales
+
+> **Nota para eliminatorias:** Si el usuario predice empate (mismo score para ambos equipos) en cualquier fase que no sea `fase_grupos`, se recomienda enviar `predicted_winner_team_id`. Sin ese campo, un empate predicho nunca suma puntos aunque el score sea exacto.
 
 **Response `200`:**
 ```json
@@ -303,6 +307,28 @@ Carga o actualiza la predicción del usuario para un partido específico. Usa up
 ```
 
 **Error `403`:** El partido ya comenzó, no se puede modificar la predicción.
+
+---
+
+#### `PUT /api/usuario/campeon` 🔒
+
+Registra el pronóstico de campeón del usuario. Solo se puede modificar antes del inicio del torneo (11 de junio de 2026). Si el equipo elegido sale campeón, el usuario recibe 50 puntos extra al finalizar la final.
+
+**Body:**
+```json
+{
+  "champion_team_id": 37
+}
+```
+
+**Response `200`:**
+```json
+{
+  "message": "Pronóstico de campeón guardado"
+}
+```
+
+**Error `403`:** El torneo ya comenzó, no se puede modificar el pronóstico.
 
 ---
 
@@ -585,3 +611,7 @@ Busca usuarios por nombre. Útil para invitar amigos a un grupo.
 **Partidos de eliminatorias:** Los partidos de octavos de final no tienen equipos predefinidos. Se van completando a medida que avanza el torneo. Los de cuartos, semis, tercer puesto y final se completan automáticamente cuando terminan los partidos anteriores.
 
 **Fechas:** Todas las fechas se devuelven en formato ISO 8601 en UTC. Se recomienda convertirlas a la zona horaria local del usuario en el frontend.
+
+**Predicción de ganador en eliminatorias:** En partidos de fase eliminatoria, si el usuario predice un empate en el marcador, el sistema usa `predicted_winner_team_id` para determinar si acertó el ganador por penales. Sin ese campo, un empate predicho con score exacto no suma los 3 puntos completos.
+
+**Pronóstico de campeón:** Cada usuario puede registrar un equipo campeón antes del inicio del torneo (11 de junio). Si acierta, recibe 50 puntos extra que se suman automáticamente al finalizar la final. Este bono se aplica una sola vez y no afecta el puntaje por partidos individuales.

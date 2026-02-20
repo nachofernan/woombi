@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'total_points',
         'role',
+        'champion_team_id',
     ];
 
     /**
@@ -66,10 +67,12 @@ class User extends Authenticatable
             'password' => 'hashed',
             'total_points' => 'integer',
             'role' => 'string',
+            'champion_team_id' => 'integer',
         ];
     }
 
     public function predictions() { return $this->hasMany(Prediction::class); }
     public function groups() { return $this->belongsToMany(Group::class)->withPivot('total_points'); }
     public function ownedGroups() { return $this->hasMany(Group::class, 'owner_id'); }
+    public function championTeam() { return $this->belongsTo(Team::class, 'champion_team_id'); }
 }

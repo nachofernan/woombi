@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/grupos/{id}/salir',    [GroupController::class, 'salir']);
 
     // Usuarios
-    Route::get('/usuarios/leaderboard',   [UserController::class, 'leaderboard']);
-    Route::post('/usuarios/buscar',       [UserController::class, 'buscar']);
+    Route::put('/usuario/campeon',         [UserController::class, 'setCampeon']);
+    Route::get('/usuarios/leaderboard',    [UserController::class, 'leaderboard']);
+    Route::post('/usuarios/buscar',        [UserController::class, 'buscar']);
 });

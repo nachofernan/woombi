@@ -28,6 +28,7 @@ class PredictionController extends Controller
         $data = $request->validate([
             'predicted_home_score' => 'required|integer|min:0|max:20',
             'predicted_away_score' => 'required|integer|min:0|max:20',
+            'predicted_winner_team_id' => 'nullable|integer|exists:teams,id',
         ]);
 
         $prediction = Prediction::updateOrCreate(

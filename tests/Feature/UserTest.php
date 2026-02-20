@@ -20,3 +20,32 @@ test('se puede buscar usuarios', function () {
         ->assertOk()
         ->assertJsonStructure([['id', 'name', 'total_points']]);
 });
+
+test('un usuario puede registrar su pronóstico de campeón', function () {
+    $this->seed([
+        \Database\Seeders\TeamSeeder::class,
+    ]);
+    $team = \App\Models\Team::first();
+    $user = User::factory()->create();
+
+    $this->actingAs($user)
+        ->putJson('/api/usuario/campeon', ['champion_team_id' => $team->id])
+        ->assertOk()
+        ->assertJson(['message' => 'Pronóstico de campeón guardado']);
+});
+
+test('no se puede modificar el campeón después del 11 de junio', function () {
+    $this->seed([
+        \Database\Seeders\TeamSeeder::class,
+    ]);
+    $team = \App\Models\Team::first();
+    $user = User::factory()->create();
+
+    \Carbon\Carbon::setTestNow('2026-06-12');
+
+    $this->actingAs($user)
+        ->putJson('/api/usuario/campeon', ['champion_team_id' => $team->id])
+        ->assertForbidden();
+
+    \Carbon\Carbon::setTestNow();
+});

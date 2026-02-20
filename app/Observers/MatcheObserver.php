@@ -42,15 +42,31 @@ class MatcheObserver
             $points = 0;
             $exactHome = $prediction->predicted_home_score === $match->home_score;
             $exactAway = $prediction->predicted_away_score === $match->away_score;
+            $predictedDraw = $prediction->predicted_home_score === $prediction->predicted_away_score;
 
             if ($exactHome && $exactAway) {
-                $points = 3; // resultado exacto
-            } elseif ($winner && $this->predictedWinner($prediction, $match) === $winner->id) {
-                $points = 1; // acertó ganador
+                // En eliminatorias con empate en 90', también tiene que acertar el ganador
+                if ($predictedDraw && $match->stage !== 'fase_grupos') {
+                    $points = ($prediction->predicted_winner_team_id === $winner?->id) ? 3 : 0;
+                } else {
+                    $points = 3;
+                }
+            } elseif ($winner) {
+                $predictedWinner = $this->predictedWinner($prediction, $match);
+                // En eliminatorias, si predijo empate usa predicted_winner_team_id
+                if ($predictedDraw && $match->stage !== 'fase_grupos') {
+                    $predictedWinner = $prediction->predicted_winner_team_id;
+                }
+                if ($predictedWinner === $winner->id) {
+                    $points = 1;
+                }
             }
 
             $prediction->update(['points' => $points]);
             $this->updatePoints($prediction);
+            if ($match->stage === 'final') {
+                $this->calculateChampion($match);
+            }
         }
     }
 
@@ -71,5 +87,22 @@ class MatcheObserver
         $user->groups()->each(fn($group) => 
             $group->users()->updateExistingPivot($user->id, ['total_points' => $total])
         );
+    }
+
+    private function calculateChampion(Matche $match): void
+    {
+        $champion = $match->getWinner();
+        if (!$champion) return;
+
+        $winners = \App\Models\User::where('champion_team_id', $champion->id)->get();
+
+        foreach ($winners as $user) {
+            $total = $user->predictions()->sum('points') + 50;
+            $user->update(['total_points' => $total]);
+
+            $user->groups()->each(fn($group) =>
+                $group->users()->updateExistingPivot($user->id, ['total_points' => $total])
+            );
+        }
     }
 }

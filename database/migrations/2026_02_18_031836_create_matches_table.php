@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('away_source_match_id')->nullable()->constrained('matches')->nullOnDelete();
             $table->enum('home_source_result', ['ganador', 'perdedor'])->nullable();
             $table->enum('away_source_result', ['ganador', 'perdedor'])->nullable();
-            $table->enum('stage', ['fase_grupos', 'octavos', 'cuartos', 'semis', 'tercero', 'final']);
+            $table->enum('stage', ['fase_grupos', 'dieciseisavos', 'octavos', 'cuartos', 'semis', 'tercero', 'final']);
             $table->unsignedSmallInteger('match_number');
             $table->dateTime('match_date')->nullable();
             $table->unsignedTinyInteger('home_score')->nullable();

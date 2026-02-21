@@ -133,7 +133,8 @@ Registra un nuevo usuario. Al registrarse, el sistema crea automáticamente toda
     "name": "Juan Pérez",
     "email": "juan@example.com",
     "role": "jugador",
-    "total_points": 0
+    "total_points": 0,
+    "champion_team_id": null
   }
 }
 ```
@@ -159,7 +160,8 @@ Registra un nuevo usuario. Al registrarse, el sistema crea automáticamente toda
     "name": "Juan Pérez",
     "email": "juan@example.com",
     "role": "jugador",
-    "total_points": 42
+    "total_points": 42,
+    "champion_team_id": 12
   }
 }
 ```
@@ -224,11 +226,12 @@ Devuelve todos los partidos de una fase del torneo.
 | Valor | Descripción |
 |---|---|
 | `fase_grupos` | Fase de grupos (72 partidos) |
-| `octavos` | Octavos de final |
-| `cuartos` | Cuartos de final |
-| `semis` | Semifinales |
-| `tercero` | Tercer puesto |
-| `final` | Final |
+| `dieciseisavos` | Dieciseisavos de final |
+| `octavos`       | Octavos de final       |
+| `cuartos`       | Cuartos de final       |
+| `semis`         | Semifinales            |
+| `tercero`       | Tercer puesto          |
+| `final`         | Final                  |
 
 **Ejemplo:** `GET /api/partidos/stage/octavos`
 

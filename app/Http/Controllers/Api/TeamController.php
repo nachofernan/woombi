@@ -11,4 +11,9 @@ class TeamController extends Controller
     {
         return Team::orderBy('name')->get();
     }
+
+    public function show($id)
+    {
+        return Team::findOrFail($id);
+    }
 }

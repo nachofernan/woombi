@@ -256,6 +256,21 @@ Response `200`: Array de objetos equipo.
 
 ---
 
+#### `GET /api/equipos/{id}` 🔒
+Devuelve un equipo específico.
+
+Response `200`: Objeto equipo.
+```json
+{
+  "id": 1,
+  "name": "México",
+  "fifa_code": "MEX",
+  "flag_url": null
+}
+```
+
+---
+
 ### Predicciones
 
 > Todos los endpoints de predicciones requieren autenticación 🔒

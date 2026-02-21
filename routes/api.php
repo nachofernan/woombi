@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Equipos
     Route::get('/equipos', [TeamController::class, 'index']);
+    Route::get('/equipos/{id}', [TeamController::class, 'show']);
 
     // Partidos
     Route::get('/partidos',                [MatcheController::class, 'index']);

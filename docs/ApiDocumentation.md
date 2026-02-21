@@ -239,6 +239,23 @@ Devuelve todos los partidos de una fase del torneo.
 
 ---
 
+#### `GET /api/equipos` 🔒
+Devuelve todos los equipos del torneo.
+
+Response `200`: Array de objetos equipo.
+```json
+[
+  {
+    "id": 1,
+    "name": "México",
+    "fifa_code": "MEX",
+    "flag_url": null
+  }
+]
+```
+
+---
+
 ### Predicciones
 
 > Todos los endpoints de predicciones requieren autenticación 🔒

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\MatcheController;
 use App\Http\Controllers\Api\PredictionController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\TeamController;
 
 // Públicas
 Route::post('/login',    [AuthController::class, 'login']);
@@ -15,6 +16,9 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    // Equipos
+    Route::get('/equipos', [TeamController::class, 'index']);
 
     // Partidos
     Route::get('/partidos',                [MatcheController::class, 'index']);

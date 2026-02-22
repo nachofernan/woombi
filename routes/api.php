@@ -34,8 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Grupos de amigos
     Route::get('/grupos',                  [GroupController::class, 'index']);
     Route::post('/grupos',                 [GroupController::class, 'store']);
-    Route::get('/grupos/{id}',             [GroupController::class, 'show']);
     Route::post('/grupos/unirse',          [GroupController::class, 'unirse']);
+    Route::get('/grupos/{id}',             [GroupController::class, 'show']);
     Route::get('/grupos/{id}/posiciones',  [GroupController::class, 'posiciones']);
     Route::post('/grupos/{id}/agregar',    [GroupController::class, 'agregarUsuario']);
     Route::delete('/grupos/{id}/quitar/{user_id}', [GroupController::class, 'quitarUsuario']);
@@ -45,4 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/usuario/campeon',         [UserController::class, 'setCampeon']);
     Route::get('/usuarios/leaderboard',    [UserController::class, 'leaderboard']);
     Route::post('/usuarios/buscar',        [UserController::class, 'buscar']);
+    Route::post('/usuarios/buscar/mail',   [UserController::class, 'buscarPorMail']);
+    Route::get('/usuarios/{id}',           [UserController::class, 'show']);
 });

@@ -25,6 +25,21 @@ class UserController extends Controller
             ->get();
     }
 
+    public function buscarPorMail(Request $request)
+    {
+        $data = $request->validate(['email' => 'required|string|min:2']);
+
+        return User::where('email', 'like', '%' . $data['email'] . '%')
+            ->select('id', 'name', 'email')
+            ->limit(5)
+            ->get();
+    }
+
+    public function show($id)
+    {
+        return User::findOrFail($id);
+    }
+
     public function setCampeon(Request $request)
     {
         if (now() >= \Carbon\Carbon::parse('2026-06-11')) {

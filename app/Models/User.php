@@ -9,8 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens;
 
@@ -69,6 +71,11 @@ class User extends Authenticatable
             'role' => 'string',
             'champion_team_id' => 'integer',
         ];
+    }
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function predictions() { return $this->hasMany(Prediction::class); }

@@ -83,6 +83,31 @@ class GroupController extends Controller
         return response()->json(['message' => 'Usuario agregado al grupo']);
     }
 
+    public function agregarPorMail(Request $request, $id)
+    {
+        $group = Group::findOrFail($id);
+
+        if ($group->owner_id !== $request->user()->id) {
+            return response()->json(['error' => 'Solo el administrador puede agregar usuarios'], 403);
+        }
+
+        $data = $request->validate(['email' => 'required|email']);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'No existe ningún usuario registrado con ese mail'], 404);
+        }
+
+        if ($group->users()->where('user_id', $user->id)->exists()) {
+            return response()->json(['error' => 'El usuario ya es miembro del grupo'], 409);
+        }
+
+        $group->users()->attach($user->id, ['total_points' => 0]);
+
+        return response()->json(['message' => 'Usuario agregado al grupo', 'user' => ['id' => $user->id, 'name' => $user->name]]);
+    }
+
     public function quitarUsuario(Request $request, $id, $user_id)
     {
         $group = Group::findOrFail($id);

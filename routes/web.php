@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
+/* oute::get('/', function () {
     return view('welcome');
 });
 
@@ -14,7 +14,8 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-});
+}); */
+Route::get('/', fn() => redirect('/admin'));
 
 Route::get('/docs/ApiDocumentation.md', function () {
     return response()->download(base_path('docs/ApiDocumentation.md'));

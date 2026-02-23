@@ -70,6 +70,7 @@ class User extends Authenticatable implements FilamentUser
             'total_points' => 'integer',
             'role' => 'string',
             'champion_team_id' => 'integer',
+            'champion_updated_at' => 'datetime',
         ];
     }
 

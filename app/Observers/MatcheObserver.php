@@ -36,37 +36,68 @@ class MatcheObserver
 
     private function calculatePredictions(Matche $match): void
     {
-        $winner = $match->getWinner();
+        $match1   = \App\Models\Matche::find(config('prode.match_kickoff'));
+        $match73  = \App\Models\Matche::find(config('prode.match_16avos'));
+        $match101 = \App\Models\Matche::find(config('prode.match_semis'));
+
+        $scorePoints  = match(true) {
+            $match101 && $match->id >= $match101->id => config('prode.score_points.final'),
+            $match73  && $match->id >= $match73->id  => config('prode.score_points.medio'),
+            default                                   => config('prode.score_points.grupos'),
+        };
+        $resultPoints = match(true) {
+            $match101 && $match->id >= $match101->id => config('prode.result_points.final'),
+            $match73  && $match->id >= $match73->id  => config('prode.result_points.medio'),
+            default                                   => config('prode.result_points.grupos'),
+        };
+
+        $actualResult = match(true) {
+            $match->home_score > $match->away_score => 'home',
+            $match->away_score > $match->home_score => 'away',
+            default                                  => 'draw',
+        };
+
+        $winner = $match->getWinner(); // considera penales
 
         foreach ($match->predictions as $prediction) {
-            $points = 0;
-            $exactHome = $prediction->predicted_home_score === $match->home_score;
-            $exactAway = $prediction->predicted_away_score === $match->away_score;
-            $predictedDraw = $prediction->predicted_home_score === $prediction->predicted_away_score;
+            $pts = 0;
 
-            if ($exactHome && $exactAway) {
-                // En eliminatorias con empate en 90', también tiene que acertar el ganador
-                if ($predictedDraw && $match->stage !== 'fase_grupos') {
-                    $points = ($prediction->predicted_winner_team_id === $winner?->id) ? 3 : 0;
-                } else {
-                    $points = 3;
-                }
-            } elseif ($winner) {
-                $predictedWinner = $this->predictedWinner($prediction, $match);
-                // En eliminatorias, si predijo empate usa predicted_winner_team_id
-                if ($predictedDraw && $match->stage !== 'fase_grupos') {
-                    $predictedWinner = $prediction->predicted_winner_team_id;
-                }
-                if ($predictedWinner === $winner->id) {
-                    $points = 1;
-                }
+            // Scores individuales
+            if ($prediction->predicted_home_score === $match->home_score) $pts += $scorePoints;
+            if ($prediction->predicted_away_score === $match->away_score) $pts += $scorePoints;
+
+            // Resultado (dirección)
+            $predictedResult = match(true) {
+                $prediction->predicted_home_score > $prediction->predicted_away_score => 'home',
+                $prediction->predicted_away_score > $prediction->predicted_home_score => 'away',
+                default                                                                 => 'draw',
+            };
+            $resultadoAcertado = $predictedResult === $actualResult;
+            if ($resultadoAcertado) $pts += $resultPoints;
+
+            // Bonus +2
+            $isPredictedDraw = $predictedResult === 'draw';
+            $quienPasaAcertado = $match->stage !== 'fase_grupos'
+                && $winner
+                && (
+                    (!$isPredictedDraw && $predictedResult === ($actualResult))
+                    || ($isPredictedDraw && $prediction->predicted_winner_team_id === $winner->id)
+                );
+
+            if (
+                // En caso de querer que los grupos también tengan bonus: descomenta la siguiente línea
+                // ($match->stage === 'fase_grupos' && $resultadoAcertado) ||
+                $quienPasaAcertado
+            ) {
+                $pts += config('prode.bonus_points');
             }
 
-            $prediction->update(['points' => $points]);
+            $prediction->update(['points' => $pts]);
             $this->updatePoints($prediction);
-            if ($match->stage === 'final') {
-                $this->calculateChampion($match);
-            }
+        }
+
+        if ($match->stage === 'final') {
+            $this->calculateChampion($match);
         }
     }
 
@@ -81,12 +112,7 @@ class MatcheObserver
     {
         $user = $prediction->user;
         $total = $user->predictions()->sum('points');
-        
         $user->update(['total_points' => $total]);
-        
-        $user->groups()->each(fn($group) => 
-            $group->users()->updateExistingPivot($user->id, ['total_points' => $total])
-        );
     }
 
     private function calculateChampion(Matche $match): void
@@ -94,15 +120,23 @@ class MatcheObserver
         $champion = $match->getWinner();
         if (!$champion) return;
 
+        $match1   = \App\Models\Matche::find(config('prode.match_kickoff'));
+        $match73  = \App\Models\Matche::find(config('prode.match_16avos'));
+        $match101 = \App\Models\Matche::find(config('prode.match_semis'));
+
         $winners = \App\Models\User::where('champion_team_id', $champion->id)->get();
 
         foreach ($winners as $user) {
-            $total = $user->predictions()->sum('points') + 50;
-            $user->update(['total_points' => $total]);
+            $updatedAt = $user->champion_updated_at;
 
-            $user->groups()->each(fn($group) =>
-                $group->users()->updateExistingPivot($user->id, ['total_points' => $total])
-            );
+            $bonus = match(true) {
+                $match1  && $updatedAt < $match1->match_date  => config('prode.champion_bonus.antes_mundial'),
+                $match73 && $updatedAt < $match73->match_date => config('prode.champion_bonus.medio'),
+                default                                        => config('prode.champion_bonus.final'),
+            };
+
+            $total = $user->predictions()->sum('points') + $bonus;
+            $user->update(['total_points' => $total]);
         }
     }
 }

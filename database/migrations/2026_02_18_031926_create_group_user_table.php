@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('group_user', function (Blueprint $table) {
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->unsignedInteger('total_points')->default(0);
             $table->primary(['group_id', 'user_id']);
         });
     }

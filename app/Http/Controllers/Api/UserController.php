@@ -42,7 +42,11 @@ class UserController extends Controller
 
     public function setCampeon(Request $request)
     {
-        if (now() >= \Carbon\Carbon::parse('2026-06-11')) {
+        $match1   = \App\Models\Matche::find(1);
+        $match73  = \App\Models\Matche::find(73);
+        $match101 = \App\Models\Matche::find(101);
+
+        if ($match101 && now() >= $match101->match_date) {
             return response()->json(['error' => 'Ya no se puede modificar el pronóstico de campeón'], 403);
         }
 
@@ -50,7 +54,10 @@ class UserController extends Controller
             'champion_team_id' => 'required|integer|exists:teams,id',
         ]);
 
-        $request->user()->update($data);
+        $request->user()->update([
+            'champion_team_id'    => $data['champion_team_id'],
+            'champion_updated_at' => now(),
+        ]);
 
         return response()->json(['message' => 'Pronóstico de campeón guardado']);
     }

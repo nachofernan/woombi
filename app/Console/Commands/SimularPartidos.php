@@ -8,11 +8,41 @@ use Illuminate\Support\Collection;
 
 class SimularPartidos extends Command
 {
-    protected $signature   = 'prode:simular';
+    protected $signature = 'prode:simular {--reset : Resetea todos los partidos al estado inicial}';
     protected $description = 'Simula resultados random para partidos pendientes';
 
     public function handle(): void
     {
+        if ($this->option('reset')) {
+            if (!$this->confirm('¿Resetear todos los partidos al estado inicial?')) {
+                $this->info('Cancelado.');
+                return;
+            }
+
+            Matche::where('stage', 'fase_grupos')->update([
+                'home_score'        => null,
+                'away_score'        => null,
+                'penalty_winner_id' => null,
+                'status'            => 'pendiente',
+            ]);
+
+            Matche::where('stage', '!=', 'fase_grupos')->update([
+                'home_team_id'      => null,
+                'away_team_id'      => null,
+                'home_score'        => null,
+                'away_score'        => null,
+                'penalty_winner_id' => null,
+                'status'            => 'pendiente',
+            ]);
+
+            // Resetear puntos de usuarios y predicciones
+            \App\Models\User::query()->update(['total_points' => 0]);
+            \App\Models\Prediction::query()->update(['points' => null]);
+
+            $this->info('Partidos reseteados.');
+            return;
+        }
+
         $siguiente = Matche::where('status', '!=', 'finalizado')
             ->orderBy('id')
             ->first();

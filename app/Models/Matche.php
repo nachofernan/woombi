@@ -31,7 +31,7 @@ class Matche extends Model
     public function penaltyWinner() { return $this->belongsTo(Team::class, 'penalty_winner_id'); }
     public function homeSourceMatch() { return $this->belongsTo(Matche::class, 'home_source_match_id'); }
     public function awaySourceMatch() { return $this->belongsTo(Matche::class, 'away_source_match_id'); }
-    public function predictions() { return $this->hasMany(Prediction::class); }
+    public function predictions() { return $this->hasMany(Prediction::class, 'match_id'); }
 
     public function getWinner(): ?Team
     {

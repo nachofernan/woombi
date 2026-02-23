@@ -16,6 +16,6 @@ class Prediction extends Model
     ];
 
     public function user() { return $this->belongsTo(User::class); }
-    public function match() { return $this->belongsTo(Matche::class); }
+    public function match() { return $this->belongsTo(Matche::class, 'match_id'); }
     public function predictedWinnerTeam() { return $this->belongsTo(Team::class, 'predicted_winner_team_id'); }
 }

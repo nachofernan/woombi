@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Models\Matche;
 
 test('se puede ver el leaderboard', function () {
     $user = User::factory()->create();
@@ -34,14 +35,19 @@ test('un usuario puede registrar su pronóstico de campeón', function () {
         ->assertJson(['message' => 'Pronóstico de campeón guardado']);
 });
 
-test('no se puede modificar el campeón después del 11 de junio', function () {
+test('no se puede modificar el campeón desde semis', function () {
     $this->seed([
+        \Database\Seeders\TournamentGroupSeeder::class,
         \Database\Seeders\TeamSeeder::class,
+        \Database\Seeders\GroupTeamSeeder::class,
+        \Database\Seeders\MatcheSeeder::class,
+        \Database\Seeders\MatcheEliminatoriosSeeder::class,
     ]);
+
     $team = \App\Models\Team::first();
     $user = User::factory()->create();
 
-    \Carbon\Carbon::setTestNow('2026-06-12');
+    \Carbon\Carbon::setTestNow('2026-07-22 00:00:00'); // después del arranque de semis (21/07)
 
     $this->actingAs($user)
         ->putJson('/api/usuario/campeon', ['champion_team_id' => $team->id])

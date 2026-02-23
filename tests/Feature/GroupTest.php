@@ -34,7 +34,7 @@ test('no se puede unir dos veces al mismo grupo', function () {
         'owner_id'    => $owner->id,
         'invite_code' => 'XYZ99999',
     ]);
-    $group->users()->attach($user->id, ['total_points' => 0]);
+    $group->users()->attach($user->id);
 
     $this->actingAs($user)
         ->postJson('/api/grupos/unirse', ['invite_code' => 'XYZ99999'])

@@ -22,15 +22,16 @@ class MatcheObserver
         $loser  = ($winner?->id === $match->home_team_id) ? $match->awayTeam : $match->homeTeam;
 
         foreach (['home', 'away'] as $side) {
-            $sourceField  = "{$side}_source_match_id";
-            $resultField  = "{$side}_source_result";
-            $teamField    = "{$side}_team_id";
+            $sourceField = "{$side}_source_match_id";
+            $resultField = "{$side}_source_result";
+            $teamField   = "{$side}_team_id";
 
-            $next = Matche::where($sourceField, $match->id)->first();
-            if (!$next) continue;
+            $nexts = Matche::where($sourceField, $match->id)->get();
 
-            $resolved = $next->$resultField === 'ganador' ? $winner : $loser;
-            if ($resolved) $next->update([$teamField => $resolved->id]);
+            foreach ($nexts as $next) {
+                $resolved = $next->$resultField === 'ganador' ? $winner : $loser;
+                if ($resolved) $next->update([$teamField => $resolved->id]);
+            }
         }
     }
 

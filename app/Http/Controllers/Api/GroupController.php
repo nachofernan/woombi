@@ -24,7 +24,7 @@ class GroupController extends Controller
             'invite_code' => Str::random(8),
         ]);
 
-        $group->users()->attach($request->user()->id, ['total_points' => 0]);
+        $group->users()->attach($request->user()->id);
 
         return response()->json($group, 201);
     }
@@ -44,7 +44,7 @@ class GroupController extends Controller
             return response()->json(['error' => 'Ya sos miembro de este grupo'], 409);
         }
 
-        $group->users()->attach($user->id, ['total_points' => 0]);
+        $group->users()->attach($user->id);
 
         return response()->json($group);
     }
@@ -78,7 +78,7 @@ class GroupController extends Controller
             return response()->json(['error' => 'El usuario ya es miembro del grupo'], 409);
         }
 
-        $group->users()->attach($data['user_id'], ['total_points' => 0]);
+        $group->users()->attach($data['user_id']);
 
         return response()->json(['message' => 'Usuario agregado al grupo']);
     }
@@ -103,7 +103,7 @@ class GroupController extends Controller
             return response()->json(['error' => 'El usuario ya es miembro del grupo'], 409);
         }
 
-        $group->users()->attach($user->id, ['total_points' => 0]);
+        $group->users()->attach($user->id);
 
         return response()->json(['message' => 'Usuario agregado al grupo', 'user' => ['id' => $user->id, 'name' => $user->name]]);
     }

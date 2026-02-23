@@ -123,7 +123,7 @@ test('solo resultado correcto en fase media suma 4 puntos', function () {
 
     finalizarPartido($match, 2, 1);
 
-    expect($user->fresh()->total_points)->toBe(4); // resultado + bonus quien pasa
+    expect($user->fresh()->total_points)->toBe(6); // resultado (4) + bonus quien pasa (2)
 });
 
 test('empate con penalty winner correcto en fase media suma 10 puntos', function () {

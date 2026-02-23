@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Matche;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 
 class SimularPartidos extends Command
 {
@@ -13,8 +14,6 @@ class SimularPartidos extends Command
     public function handle(): void
     {
         $siguiente = Matche::where('status', '!=', 'finalizado')
-            ->whereNotNull('home_team_id')
-            ->whereNotNull('away_team_id')
             ->orderBy('id')
             ->first();
 
@@ -23,9 +22,9 @@ class SimularPartidos extends Command
             return;
         }
 
-        $this->info("Siguiente partido disponible: #{$siguiente->id} — {$siguiente->homeTeam->name} vs {$siguiente->awayTeam->name} (match_number: {$siguiente->match_number})");
+        $this->info("Siguiente partido disponible: #{$siguiente->id} (match_number: {$siguiente->match_number})");
 
-        $cantidad = (int) $this->ask('¿Cuántos partidos querés simular?');
+        $cantidad = (int) $this->ask('¿Cuántos partidos querés simular?', 150);
 
         if ($cantidad <= 0) {
             $this->error('La cantidad debe ser mayor a 0.');
@@ -33,19 +32,35 @@ class SimularPartidos extends Command
         }
 
         $partidos = Matche::where('status', '!=', 'finalizado')
-            ->whereNotNull('home_team_id')
-            ->whereNotNull('away_team_id')
             ->where('id', '>=', $siguiente->id)
             ->orderBy('id')
             ->limit($cantidad)
             ->get();
 
-        if (!$this->confirm("Se van a simular {$partidos->count()} partido(s). ¿Confirmás?")) {
+        if (!$this->confirm("Se van a simular {$partidos->count()} partido(s). ¿Confirmás?", true)) {
             $this->info('Cancelado.');
             return;
         }
 
         foreach ($partidos as $partido) {
+            $partido->refresh();
+            if ($partido->stage === 'dieciseisavos') {
+                $teams = \App\Models\Team::pluck('id');
+                if (!$partido->home_team_id) {
+                    $partido->update(['home_team_id' => $teams->random()]);
+                }
+                if (!$partido->away_team_id) {
+                    $away = $teams->reject(fn($id) => $id === $partido->home_team_id)->random();
+                    $partido->update(['away_team_id' => $away]);
+                }
+                $partido->refresh();
+            }
+            if (!$partido->home_team_id || !$partido->away_team_id) {
+                $this->warn("Partido #{$partido->id} (match {$partido->match_number}) sin equipos asignados, saltando.");
+                $this->warn("{$partido->home_team_id} vs {$partido->away_team_id} (match {$partido->match_number}) sin equipos asignados, saltando.");
+                continue;
+            }
+
             $homeScore = rand(0, 4);
             $awayScore = rand(0, 4);
             $penaltyWinnerId = null;

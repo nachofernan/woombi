@@ -489,6 +489,38 @@ Permite al administrador del grupo agregar un usuario directamente usando su ID.
 
 ---
 
+#### `POST /api/grupos/{id}/agregar/mail` 🔒
+
+Permite al administrador del grupo agregar un usuario directamente usando su dirección de mail registrada.
+
+> **Restricción:** Solo el propietario del grupo puede usar este endpoint.
+
+**Body:**
+```json
+{
+  "email": "usuario@example.com"
+}
+```
+
+**Response `200`:**
+```json
+{
+  "message": "Usuario agregado al grupo",
+  "user": {
+    "id": 5,
+    "name": "Juan Pérez"
+  }
+}
+```
+
+**Error `403`:** El usuario autenticado no es el administrador del grupo.
+
+**Error `404`:** No existe ningún usuario registrado con ese mail.
+
+**Error `409`:** El usuario ya es miembro del grupo.
+
+---
+
 #### `DELETE /api/grupos/{id}/quitar/{user_id}` 🔒
 
 Permite al administrador del grupo eliminar a un miembro. No se puede usar para quitarse a sí mismo.

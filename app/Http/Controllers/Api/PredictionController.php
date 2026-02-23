@@ -17,6 +17,15 @@ class PredictionController extends Controller
             ->get();
     }
 
+    public function show(Request $request, $match_id)
+    {
+        return $request->user()
+            ->predictions()
+            ->with('match.homeTeam', 'match.awayTeam')
+            ->where('match_id', $match_id)
+            ->first();
+    }
+
     public function update(Request $request, $match_id)
     {
         $match = Matche::findOrFail($match_id);

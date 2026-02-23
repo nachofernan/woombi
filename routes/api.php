@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Predicciones
     Route::get('/predicciones',            [PredictionController::class, 'index']);
+    Route::get('/predicciones/{match_id}', [PredictionController::class, 'show']);
     Route::put('/predicciones/{match_id}', [PredictionController::class, 'update']);
 
     // Grupos de amigos

@@ -12,7 +12,19 @@ class GroupController extends Controller
 {
     public function index(Request $request)
     {
-        return User::with('groups')->findOrFail($request->user()->id);
+        $groups = $request->user()->groups()->with('users')->get();
+
+        return $groups->map(fn($group) => [
+            'id'          => $group->id,
+            'name'        => $group->name,
+            'owner_id'    => $group->owner_id,
+            'invite_code' => $group->invite_code,
+            'users'       => $group->users->map(fn($user) => [
+                'id'           => $user->id,
+                'name'         => $user->name,
+                'total_points' => $user->total_points,
+            ]),
+        ]);
     }
 
     public function store(Request $request)
@@ -32,7 +44,19 @@ class GroupController extends Controller
 
     public function show($id)
     {
-        return Group::with('users')->findOrFail($id);
+        $group = Group::with('users')->findOrFail($id);
+
+        return response()->json([
+            'id'          => $group->id,
+            'name'        => $group->name,
+            'owner_id'    => $group->owner_id,
+            'invite_code' => $group->invite_code,
+            'users'       => $group->users->map(fn($user) => [
+                'id'           => $user->id,
+                'name'         => $user->name,
+                'total_points' => $user->total_points,
+            ]),
+        ]);
     }
 
     public function unirse(Request $request)

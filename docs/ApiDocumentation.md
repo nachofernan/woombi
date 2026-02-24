@@ -470,8 +470,6 @@ Une al usuario autenticado a un grupo usando el código de invitación.
 
 Devuelve la tabla de posiciones interna del grupo, ordenada de mayor a menor puntaje.
 
-> **Nota:** El puntaje mostrado acá es el que cada usuario tiene registrado en su participación dentro del grupo, no necesariamente el puntaje global. En la implementación actual ambos valores son equivalentes.
-
 **Response `200`:**
 ```json
 [

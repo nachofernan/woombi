@@ -91,7 +91,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     public function predictions() { return $this->hasMany(Prediction::class); }
-    public function groups() { return $this->belongsToMany(Group::class)->withPivot('total_points'); }
+    public function groups() { return $this->belongsToMany(Group::class); }
     public function ownedGroups() { return $this->hasMany(Group::class, 'owner_id'); }
     public function championTeam() { return $this->belongsTo(Team::class, 'champion_team_id'); }
 }

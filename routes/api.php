@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/grupos/{id}/agregar/mail',    [GroupController::class, 'agregarPorMail']);
     Route::delete('/grupos/{id}/quitar/{user_id}', [GroupController::class, 'quitarUsuario']);
     Route::delete('/grupos/{id}/salir',    [GroupController::class, 'salir']);
+    Route::delete('/grupos/{id}',              [GroupController::class, 'destroy']);
 
     // Usuarios
     Route::put('/usuario/campeon',         [UserController::class, 'setCampeon']);

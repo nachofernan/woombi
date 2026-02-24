@@ -579,6 +579,23 @@ Permite a un miembro abandonar un grupo por voluntad propia. El propietario del 
 
 ---
 
+#### `DELETE /api/grupos/{id}`
+
+Elimina el grupo y desvincula a todos los miembros. Solo puede usarlo el propietario.
+
+**Ejemplo:** `DELETE /api/grupos/1`
+
+**Response `200`:**
+```json
+{
+  "message": "Grupo eliminado"
+}
+```
+
+**Error `403`:** El usuario autenticado no es el propietario del grupo.
+
+---
+
 ### Usuarios
 
 > Todos los endpoints de usuarios requieren autenticación 🔒

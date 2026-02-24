@@ -138,4 +138,18 @@ class GroupController extends Controller
 
         return response()->json(['message' => 'Saliste del grupo']);
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $group = Group::findOrFail($id);
+
+        if ($group->owner_id !== $request->user()->id) {
+            return response()->json(['error' => 'Solo el administrador puede eliminar el grupo'], 403);
+        }
+
+        $group->users()->detach();
+        $group->delete();
+
+        return response()->json(['message' => 'Grupo eliminado']);
+    }
 }

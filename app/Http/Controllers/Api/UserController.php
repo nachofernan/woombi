@@ -42,9 +42,9 @@ class UserController extends Controller
 
     public function setCampeon(Request $request)
     {
-        $match1   = \App\Models\Matche::find(1);
-        $match73  = \App\Models\Matche::find(73);
-        $match101 = \App\Models\Matche::find(101);
+        $match1   = \App\Models\Matche::where('match_number', config('prode.match_kickoff'))->first();
+        $match73  = \App\Models\Matche::where('match_number', config('prode.match_16avos'))->first();
+        $match101 = \App\Models\Matche::where('match_number', config('prode.match_semis'))->first();
 
         if ($match101 && now() >= $match101->match_date) {
             return response()->json(['error' => 'Ya no se puede modificar el pronóstico de campeón'], 403);

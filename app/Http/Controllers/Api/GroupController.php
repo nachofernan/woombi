@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Group;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -11,7 +12,7 @@ class GroupController extends Controller
 {
     public function index(Request $request)
     {
-        return $request->user()->groups()->get();
+        return User::with('groups')->findOrFail($request->user()->id);
     }
 
     public function store(Request $request)

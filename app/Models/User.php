@@ -79,6 +79,16 @@ class User extends Authenticatable implements FilamentUser
         return $this->role === 'admin';
     }
 
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = url(route('password.reset', [
+            'token' => $token,
+            'email' => $this->email,
+        ], false));
+
+        $this->notify(new ResetPassword($token));
+    }
+
     public function predictions() { return $this->hasMany(Prediction::class); }
     public function groups() { return $this->belongsToMany(Group::class)->withPivot('total_points'); }
     public function ownedGroups() { return $this->hasMany(Group::class, 'owner_id'); }

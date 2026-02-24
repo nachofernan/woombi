@@ -54,11 +54,11 @@ class GroupController extends Controller
         $group = Group::findOrFail($id);
 
         $posiciones = $group->users()
-            ->orderByPivot('total_points', 'desc')
+            ->orderByDesc('total_points')
             ->get()
             ->map(fn($user) => [
                 'name'         => $user->name,
-                'total_points' => $user->pivot->total_points,
+                'total_points' => $user->total_points,
             ]);
 
         return response()->json($posiciones);

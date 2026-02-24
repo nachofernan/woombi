@@ -7,9 +7,10 @@
 3. [Estructura de respuestas](#estructura-de-respuestas)
 4. [Endpoints](#endpoints)
    - [Auth](#auth)
+   - [Equipos](#equipos)
    - [Partidos](#partidos)
    - [Predicciones](#predicciones)
-   - [Grupos de amigos](#grupos-de-amigos) — listar, crear, unirse, posiciones, agregar usuario, quitar usuario, salir
+   - [Grupos de amigos](#grupos-de-amigos)
    - [Usuarios](#usuarios)
 5. [Modelos de datos](#modelos-de-datos)
 6. [Códigos de error](#códigos-de-error)
@@ -172,7 +173,7 @@ Registra un nuevo usuario. Al registrarse, el sistema crea automáticamente toda
 
 #### `POST /api/logout` 🔒
 
-Invalida el token actual. No requiere body.
+Invalida todos los tokens del usuario. No requiere body.
 
 **Response `200`:**
 ```json
@@ -183,13 +184,53 @@ Invalida el token actual. No requiere body.
 
 ---
 
+### Equipos
+
+> Todos los endpoints de equipos requieren autenticación 🔒
+
+#### `GET /api/equipos`
+
+Devuelve todos los equipos del torneo ordenados por nombre.
+
+**Response `200`:**
+```json
+[
+  {
+    "id": 1,
+    "name": "Argentina",
+    "fifa_code": "ARG",
+    "flag_url": "ar"
+  }
+]
+```
+
+---
+
+#### `GET /api/equipos/{id}`
+
+Devuelve un equipo específico.
+
+**Response `200`:**
+```json
+{
+  "id": 1,
+  "name": "Argentina",
+  "fifa_code": "ARG",
+  "flag_url": "ar"
+}
+```
+
+**Error `404`:** Equipo no encontrado.
+
+---
+
 ### Partidos
 
 > Todos los endpoints de partidos requieren autenticación 🔒
 
 #### `GET /api/partidos`
 
-Devuelve todos los partidos del torneo (fase de grupos + eliminatorias).
+Devuelve todos los partidos del torneo (fase de grupos + eliminatorias) con sus equipos y grupo.
 
 **Response `200`:** Array de objetos partido. Ver [modelo Partido](#partido).
 
@@ -227,47 +268,15 @@ Devuelve todos los partidos de una fase del torneo.
 |---|---|
 | `fase_grupos` | Fase de grupos (72 partidos) |
 | `dieciseisavos` | Dieciseisavos de final |
-| `octavos`       | Octavos de final       |
-| `cuartos`       | Cuartos de final       |
-| `semis`         | Semifinales            |
-| `tercero`       | Tercer puesto          |
-| `final`         | Final                  |
+| `octavos` | Octavos de final |
+| `cuartos` | Cuartos de final |
+| `semis` | Semifinales |
+| `tercero` | Tercer puesto |
+| `final` | Final |
 
 **Ejemplo:** `GET /api/partidos/stage/octavos`
 
 **Response `200`:** Array de objetos partido de la fase solicitada.
-
----
-
-#### `GET /api/equipos` 🔒
-Devuelve todos los equipos del torneo.
-
-Response `200`: Array de objetos equipo.
-```json
-[
-  {
-    "id": 1,
-    "name": "México",
-    "fifa_code": "MEX",
-    "flag_url": null
-  }
-]
-```
-
----
-
-#### `GET /api/equipos/{id}` 🔒
-Devuelve un equipo específico.
-
-Response `200`: Objeto equipo.
-```json
-{
-  "id": 1,
-  "name": "México",
-  "fifa_code": "MEX",
-  "flag_url": null
-}
-```
 
 ---
 
@@ -302,17 +311,27 @@ Devuelve todas las predicciones del usuario autenticado, incluyendo datos del pa
 ]
 ```
 
-> **Nota:** Al registrarse, cada usuario tiene predicciones creadas para todos los partidos con scores en `null`. El frontend puede usar este endpoint para mostrar el fixture completo con el estado de cada predicción del usuario.
+> **Nota:** Al registrarse, cada usuario tiene predicciones creadas para todos los partidos con scores en `null`. Este endpoint puede usarse para mostrar el fixture completo con el estado de cada predicción del usuario.
 
 ---
 
-#### `PUT /api/predicciones/{match_id}` 🔒
+#### `GET /api/predicciones/{match_id}`
+
+Devuelve la predicción del usuario autenticado para un partido específico.
+
+**Parámetro:** `match_id` — ID del partido (no de la predicción).
+
+**Response `200`:** Objeto predicción con datos del partido y equipos. Misma estructura que cada ítem de `GET /api/predicciones`.
+
+---
+
+#### `PUT /api/predicciones/{match_id}`
 
 Carga o actualiza la predicción del usuario para un partido específico. Usa upsert: si ya existe la actualiza, si no la crea.
 
-> **Restricción:** No se puede predecir un partido que ya comenzó (la fecha del partido es menor o igual a la hora actual). La API devuelve `403` en ese caso.
+> **Restricción:** No se puede predecir un partido que ya comenzó (`match_date` <= hora actual). La API devuelve `403` en ese caso.
 
-**Parámetro:** `match_id` — ID del partido (no de la predicción)
+**Parámetro:** `match_id` — ID del partido (no de la predicción).
 
 **Body:**
 ```json
@@ -327,7 +346,7 @@ Carga o actualiza la predicción del usuario para un partido específico. Usa up
 - `predicted_home_score` y `predicted_away_score`: requeridos, enteros entre 0 y 20
 - `predicted_winner_team_id`: opcional, ID válido de un equipo. En partidos de eliminatorias donde el usuario predice empate, se usa para determinar quién gana en penales
 
-> **Nota para eliminatorias:** Si el usuario predice empate (mismo score para ambos equipos) en cualquier fase que no sea `fase_grupos`, se recomienda enviar `predicted_winner_team_id`. Sin ese campo, un empate predicho nunca suma puntos aunque el score sea exacto.
+> **Nota para eliminatorias:** Si el usuario predice empate en cualquier fase que no sea `fase_grupos`, se recomienda enviar `predicted_winner_team_id`. Sin ese campo, un empate predicho con score exacto no suma los puntos del bonus de quién pasa.
 
 **Response `200`:**
 ```json
@@ -337,6 +356,7 @@ Carga o actualiza la predicción del usuario para un partido específico. Usa up
   "match_id": 1,
   "predicted_home_score": 2,
   "predicted_away_score": 1,
+  "predicted_winner_team_id": null,
   "points": null
 }
 ```
@@ -347,7 +367,7 @@ Carga o actualiza la predicción del usuario para un partido específico. Usa up
 
 #### `PUT /api/usuario/campeon` 🔒
 
-Registra el pronóstico de campeón del usuario. Solo se puede modificar antes del inicio del torneo (11 de junio de 2026). Si el equipo elegido sale campeón, el usuario recibe 50 puntos extra al finalizar la final.
+Registra o actualiza el pronóstico de campeón del usuario. Se puede modificar hasta el inicio de las semifinales. El bonus que recibe el usuario si acierta depende de cuándo fue el último cambio — ver [sistema de puntos](#sistema-de-puntos).
 
 **Body:**
 ```json
@@ -363,7 +383,7 @@ Registra el pronóstico de campeón del usuario. Solo se puede modificar antes d
 }
 ```
 
-**Error `403`:** El torneo ya comenzó, no se puede modificar el pronóstico.
+**Error `403`:** Las semifinales ya comenzaron, no se puede modificar el pronóstico.
 
 ---
 
@@ -371,7 +391,7 @@ Registra el pronóstico de campeón del usuario. Solo se puede modificar antes d
 
 > Todos los endpoints de grupos requieren autenticación 🔒
 
-Los grupos de amigos son torneos privados. Cada grupo tiene un `invite_code` único que se comparte para que otros usuarios puedan unirse. Todos los miembros del grupo predicen los mismos partidos del mundial, pero tienen su propia tabla de posiciones interna.
+Los grupos de amigos son torneos privados. Cada grupo tiene un `invite_code` único que se comparte para que otros usuarios puedan unirse. Todos los miembros del grupo predicen los mismos partidos del mundial pero tienen su propia tabla de posiciones interna.
 
 #### `GET /api/grupos`
 
@@ -440,15 +460,17 @@ Une al usuario autenticado a un grupo usando el código de invitación.
 
 **Response `200`:** Objeto del grupo al que se unió.
 
-**Error `409`:** El usuario ya es miembro de ese grupo.
-
 **Error `404`:** Código de invitación inválido.
+
+**Error `409`:** El usuario ya es miembro de ese grupo.
 
 ---
 
 #### `GET /api/grupos/{id}/posiciones`
 
 Devuelve la tabla de posiciones interna del grupo, ordenada de mayor a menor puntaje.
+
+> **Nota:** El puntaje mostrado acá es el que cada usuario tiene registrado en su participación dentro del grupo, no necesariamente el puntaje global. En la implementación actual ambos valores son equivalentes.
 
 **Response `200`:**
 ```json
@@ -461,9 +483,9 @@ Devuelve la tabla de posiciones interna del grupo, ordenada de mayor a menor pun
 
 ---
 
-#### `POST /api/grupos/{id}/agregar` 🔒
+#### `POST /api/grupos/{id}/agregar`
 
-Permite al administrador del grupo agregar un usuario directamente usando su ID. El flujo recomendado es buscar al usuario primero con `POST /api/usuarios/buscar`, obtener su `id` del resultado, y pasarlo acá.
+Permite al propietario del grupo agregar un usuario directamente usando su ID. El flujo recomendado es buscar al usuario primero con `POST /api/usuarios/buscar`, obtener su `id` del resultado, y pasarlo acá.
 
 > **Restricción:** Solo el propietario del grupo puede usar este endpoint.
 
@@ -481,7 +503,7 @@ Permite al administrador del grupo agregar un usuario directamente usando su ID.
 }
 ```
 
-**Error `403`:** El usuario autenticado no es el administrador del grupo.
+**Error `403`:** El usuario autenticado no es el propietario del grupo.
 
 **Error `409`:** El usuario ya es miembro del grupo.
 
@@ -489,9 +511,9 @@ Permite al administrador del grupo agregar un usuario directamente usando su ID.
 
 ---
 
-#### `POST /api/grupos/{id}/agregar/mail` 🔒
+#### `POST /api/grupos/{id}/agregar/mail`
 
-Permite al administrador del grupo agregar un usuario directamente usando su dirección de mail registrada.
+Permite al propietario del grupo agregar un usuario directamente usando su dirección de mail registrada.
 
 > **Restricción:** Solo el propietario del grupo puede usar este endpoint.
 
@@ -513,7 +535,7 @@ Permite al administrador del grupo agregar un usuario directamente usando su dir
 }
 ```
 
-**Error `403`:** El usuario autenticado no es el administrador del grupo.
+**Error `403`:** El usuario autenticado no es el propietario del grupo.
 
 **Error `404`:** No existe ningún usuario registrado con ese mail.
 
@@ -521,13 +543,11 @@ Permite al administrador del grupo agregar un usuario directamente usando su dir
 
 ---
 
-#### `DELETE /api/grupos/{id}/quitar/{user_id}` 🔒
+#### `DELETE /api/grupos/{id}/quitar/{user_id}`
 
-Permite al administrador del grupo eliminar a un miembro. No se puede usar para quitarse a sí mismo.
+Permite al propietario del grupo eliminar a un miembro. No se puede usar para quitarse a uno mismo.
 
 > **Restricción:** Solo el propietario del grupo puede usar este endpoint.
-
-**Parámetros:** `id` — ID del grupo, `user_id` — ID del usuario a quitar.
 
 **Ejemplo:** `DELETE /api/grupos/1/quitar/5`
 
@@ -538,15 +558,15 @@ Permite al administrador del grupo eliminar a un miembro. No se puede usar para 
 }
 ```
 
-**Error `403`:** El usuario autenticado no es el administrador del grupo.
+**Error `403`:** El usuario autenticado no es el propietario del grupo.
 
-**Error `422`:** El administrador intentó quitarse a sí mismo.
+**Error `422`:** El propietario intentó quitarse a sí mismo.
 
 ---
 
-#### `DELETE /api/grupos/{id}/salir` 🔒
+#### `DELETE /api/grupos/{id}/salir`
 
-Permite a un miembro abandonar un grupo por voluntad propia. El administrador del grupo no puede usar este endpoint — si quiere disolver el grupo, deberá hacerlo desde el panel de administración.
+Permite a un miembro abandonar un grupo por voluntad propia. El propietario del grupo no puede usar este endpoint.
 
 **Response `200`:**
 ```json
@@ -555,7 +575,7 @@ Permite a un miembro abandonar un grupo por voluntad propia. El administrador de
 }
 ```
 
-**Error `422`:** El administrador intentó abandonar su propio grupo.
+**Error `422`:** El propietario intentó abandonar su propio grupo.
 
 ---
 
@@ -565,7 +585,7 @@ Permite a un miembro abandonar un grupo por voluntad propia. El administrador de
 
 #### `GET /api/usuarios/leaderboard`
 
-Devuelve el ranking global de todos los usuarios, ordenado por puntaje.
+Devuelve el ranking global de todos los usuarios, ordenado por puntaje de mayor a menor.
 
 **Response `200`:**
 ```json
@@ -578,9 +598,19 @@ Devuelve el ranking global de todos los usuarios, ordenado por puntaje.
 
 ---
 
+#### `GET /api/usuarios/{id}`
+
+Devuelve los datos de un usuario específico.
+
+**Response `200`:** Objeto usuario completo.
+
+**Error `404`:** Usuario no encontrado.
+
+---
+
 #### `POST /api/usuarios/buscar`
 
-Busca usuarios por nombre. Útil para invitar amigos a un grupo.
+Busca usuarios por nombre. Útil para invitar amigos a un grupo. Devuelve hasta 10 resultados.
 
 **Body:**
 ```json
@@ -594,12 +624,32 @@ Busca usuarios por nombre. Útil para invitar amigos a un grupo.
 **Response `200`:**
 ```json
 [
-  { "id": 1, "name": "Juan Pérez",   "total_points": 42 },
-  { "id": 5, "name": "Juanita López","total_points": 15 }
+  { "id": 1, "name": "Juan Pérez",    "total_points": 42 },
+  { "id": 5, "name": "Juanita López", "total_points": 15 }
 ]
 ```
 
-> Devuelve hasta 10 resultados.
+---
+
+#### `POST /api/usuarios/buscar/mail`
+
+Busca usuarios por dirección de mail. Útil como alternativa a la búsqueda por nombre. Devuelve hasta 5 resultados.
+
+**Body:**
+```json
+{
+  "email": "juan"
+}
+```
+
+**Validación:** `email` debe tener al menos 2 caracteres.
+
+**Response `200`:**
+```json
+[
+  { "id": 1, "name": "Juan Pérez", "email": "juan@example.com" }
+]
+```
 
 ---
 
@@ -627,13 +677,13 @@ Busca usuarios por nombre. Útil para invitar amigos a un grupo.
     "id": 1,
     "name": "México",
     "fifa_code": "MEX",
-    "flag_url": null
+    "flag_url": "mx"
   },
   "away_team": {
     "id": 2,
     "name": "Sudáfrica",
     "fifa_code": "RSA",
-    "flag_url": null
+    "flag_url": "za"
   }
 }
 ```
@@ -646,9 +696,55 @@ Busca usuarios por nombre. Útil para invitar amigos a un grupo.
 | `en_juego` | El partido está en curso |
 | `finalizado` | El partido terminó |
 
-**Valores posibles de `stage`:** `fase_grupos`, `octavos`, `cuartos`, `semis`, `tercero`, `final`
+**Valores posibles de `stage`:** `fase_grupos`, `dieciseisavos`, `octavos`, `cuartos`, `semis`, `tercero`, `final`
 
 > En partidos de eliminatorias que aún no tienen equipos definidos, `home_team` y `away_team` pueden ser `null`.
+
+---
+
+## Sistema de puntos
+
+Los puntos se calculan automáticamente cuando un partido es marcado como `finalizado`. La lógica es acumulativa: cada componente suma por separado.
+
+### Fase de grupos (partidos 1–72)
+
+| Acierto | Puntos |
+|---|---|
+| Score del local exacto | +1 |
+| Score del visitante exacto | +1 |
+| Resultado correcto (ganador o empate) | +3 |
+| **Máximo posible** | **5** |
+
+### Fase media (dieciseisavos, octavos, cuartos — partidos 73–100)
+
+| Acierto | Puntos |
+|---|---|
+| Score del local exacto | +2 |
+| Score del visitante exacto | +2 |
+| Resultado correcto | +4 |
+| Bonus: acertaste quién pasa | +2 |
+| **Máximo posible** | **10** |
+
+### Fase final (semis, tercer puesto, final — partidos 101–104)
+
+| Acierto | Puntos |
+|---|---|
+| Score del local exacto | +3 |
+| Score del visitante exacto | +3 |
+| Resultado correcto | +5 |
+| Bonus: acertaste quién pasa | +2 |
+| **Máximo posible** | **13** |
+
+### Pronóstico de campeón
+
+El bonus se aplica al finalizar la final, según cuándo fue el último cambio al pronóstico:
+
+| Momento del último cambio | Bonus si acierta |
+|---|---|
+| Antes del inicio del torneo (partido 1) | +50 |
+| Durante la fase de grupos (partidos 1–72) | +30 |
+| Durante la fase media (partidos 73–100) | +10 |
+| Desde las semifinales en adelante | bloqueado |
 
 ---
 
@@ -669,16 +765,16 @@ Busca usuarios por nombre. Útil para invitar amigos a un grupo.
 
 ## Notas de implementación
 
-**Sistema de puntos:** Los puntos se calculan automáticamente cuando un partido es marcado como finalizado. La lógica es: resultado exacto = 3 puntos, ganador correcto = 1 punto, error total = 0 puntos. El puntaje se refleja tanto en el perfil del usuario como en la tabla de cada grupo de amigos al que pertenece.
+**Sistema de puntos:** Los puntos se calculan automáticamente cuando un partido es marcado como `finalizado`. El cálculo es acumulativo por componente (score local, score visitante, resultado, bonus quién pasa) con valores que escalan según la fase del torneo. Ver la sección [Sistema de puntos](#sistema-de-puntos) para el detalle completo.
 
 **Predicciones vacías:** Al registrarse, cada usuario tiene predicciones creadas para los 104 partidos del torneo con scores en `null`. El frontend puede detectar si una predicción está cargada chequeando si `predicted_home_score` es distinto de `null`.
 
 **Bloqueo de predicciones:** Una vez que `match_date` es menor o igual a la hora actual, la API rechaza modificaciones a esa predicción con un `403`. Se recomienda que el frontend deshabilite el input de predicción basándose en `match_date` para evitar el request innecesario.
 
-**Partidos de eliminatorias:** Los partidos de octavos de final no tienen equipos predefinidos. Se van completando a medida que avanza el torneo. Los de cuartos, semis, tercer puesto y final se completan automáticamente cuando terminan los partidos anteriores.
+**Partidos de eliminatorias:** Los partidos de dieciseisavos se cargan manualmente cuando termina la fase de grupos. Los de octavos en adelante se completan automáticamente cuando terminan los partidos anteriores.
 
 **Fechas:** Todas las fechas se devuelven en formato ISO 8601 en UTC. Se recomienda convertirlas a la zona horaria local del usuario en el frontend.
 
-**Predicción de ganador en eliminatorias:** En partidos de fase eliminatoria, si el usuario predice un empate en el marcador, el sistema usa `predicted_winner_team_id` para determinar si acertó el ganador por penales. Sin ese campo, un empate predicho con score exacto no suma los 3 puntos completos.
+**Predicción de ganador en eliminatorias:** En partidos de fase eliminatoria, si el usuario predice empate en el marcador, el sistema usa `predicted_winner_team_id` para determinar si acertó el ganador por penales y si corresponde el bonus de +2. Sin ese campo, un empate predicho con score exacto no cobra el bonus.
 
-**Pronóstico de campeón:** Cada usuario puede registrar un equipo campeón antes del inicio del torneo (11 de junio). Si acierta, recibe 50 puntos extra que se suman automáticamente al finalizar la final. Este bono se aplica una sola vez y no afecta el puntaje por partidos individuales.
+**Pronóstico de campeón:** Se puede registrar o modificar hasta el inicio de las semifinales. El timestamp del último cambio (`champion_updated_at`) determina el bonus que corresponde si el usuario acierta.

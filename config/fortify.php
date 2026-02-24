@@ -156,4 +156,8 @@ return [
         ]),
     ],
 
+    'redirects' => [
+        'password.reset' => 'https://prode.elbondi.online',
+    ],
+
 ];

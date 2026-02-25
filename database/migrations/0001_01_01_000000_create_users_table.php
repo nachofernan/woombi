@@ -22,7 +22,6 @@ return new class extends Migration
             $table->string('profile_photo_path', 2048)->nullable();
             $table->unsignedInteger('total_points')->default(0);
             $table->string('role')->default('jugador');
-            $table->timestamp('champion_updated_at')->nullable()->after('champion_team_id');
             $table->timestamps();
         });
 

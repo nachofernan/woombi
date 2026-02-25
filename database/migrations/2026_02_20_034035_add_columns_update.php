@@ -22,6 +22,7 @@ return new class extends Migration
                 ->after('total_points')
                 ->constrained('teams')
                 ->nullOnDelete();
+            $table->timestamp('champion_updated_at')->nullable()->after('champion_team_id');
         });
     }
 
@@ -35,6 +36,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['champion_team_id']);
             $table->dropColumn('champion_team_id');
+            $table->dropColumn('champion_updated_at');
         });
     }
 };

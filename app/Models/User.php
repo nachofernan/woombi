@@ -35,6 +35,7 @@ class User extends Authenticatable implements FilamentUser
         'total_points',
         'role',
         'champion_team_id',
+        'champion_updated_at',
     ];
 
     /**

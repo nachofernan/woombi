@@ -82,6 +82,7 @@ class GroupController extends Controller
             ->orderByDesc('total_points')
             ->get()
             ->map(fn($user) => [
+                'id'           => $user->id,
                 'name'         => $user->name,
                 'total_points' => $user->total_points,
             ]);

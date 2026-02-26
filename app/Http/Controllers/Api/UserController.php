@@ -11,7 +11,7 @@ class UserController extends Controller
     public function leaderboard()
     {
         return User::orderByDesc('total_points')
-            ->select('name', 'total_points')
+            ->select('id', 'name', 'total_points')
             ->get();
     }
 

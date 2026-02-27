@@ -17,6 +17,11 @@
 
         <!-- Styles -->
         @livewireStyles
+        <style>
+            .marker-font {
+                font-family: 'Permanent Marker', cursive;
+            }
+        </style>
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">

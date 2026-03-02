@@ -15,6 +15,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'password' => 'string',
         ]);
+        return response()->json(['data' => $data]);
 
         $request->user()->update([
             'name' => $data['name'],

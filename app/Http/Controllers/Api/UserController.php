@@ -5,9 +5,25 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function update(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'password' => 'string',
+        ]);
+
+        $request->user()->update([
+            'name' => $data['name'],
+            'password' => $data['password'] ? Hash::make($data['password']) : $request->user()->password,
+        ]);
+
+        return response()->json(['message' => 'Perfil actualizado']);
+    }
+
     public function leaderboard()
     {
         return User::orderByDesc('total_points')

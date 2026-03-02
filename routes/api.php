@@ -46,6 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Usuarios
     Route::put('/usuario/campeon',         [UserController::class, 'setCampeon']);
+    Route::put('/usuario/update',         [UserController::class, 'update']);
     Route::get('/usuarios/leaderboard',    [UserController::class, 'leaderboard']);
     Route::post('/usuarios/buscar',        [UserController::class, 'buscar']);
     Route::post('/usuarios/buscar/mail',   [UserController::class, 'buscarPorMail']);

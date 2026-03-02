@@ -19,7 +19,7 @@ class UserController extends Controller
             'name' => $data['name'],
         ]);
 
-        if ($request->has('password')) {
+        if ($request->has('password') && $request->password != '') {
             $request->user()->update([
                 'password' => Hash::make($request->password),
             ]);

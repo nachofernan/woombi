@@ -12,14 +12,18 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'password' => 'sometimes|string',
+            'name' => 'required|string|max:255'
         ]);
 
         $request->user()->update([
             'name' => $data['name'],
-            'password' => $data['password'] ? Hash::make($data['password']) : $request->user()->password,
         ]);
+
+        if ($request->has('password')) {
+            $request->user()->update([
+                'password' => Hash::make($request->password),
+            ]);
+        }
 
         return response()->json(['message' => 'Perfil actualizado']);
     }

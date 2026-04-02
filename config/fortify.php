@@ -157,7 +157,7 @@ return [
     ],
 
     'redirects' => [
-        'password.reset' => 'https://prode.elbondi.online',
+        'password.reset' => 'https://woombi.com.ar',
     ],
 
 ];

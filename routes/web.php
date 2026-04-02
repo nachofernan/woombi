@@ -19,7 +19,7 @@ Route::get('/', fn() => redirect('/admin'));
 
 Route::get('login', function () {
     return redirect('https://woombi.com.ar');
-});
+})->name('login');
 
 Route::get('/docs/ApiDocumentation.md', function () {
     return response()->download(base_path('docs/ApiDocumentation.md'));

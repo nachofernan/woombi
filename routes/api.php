@@ -15,6 +15,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 // Telegram
 Route::get('/telegram/token',          [TelegramController::class, 'generarToken'])->middleware('auth:sanctum');
+Route::delete('/telegram/desvincular', [TelegramController::class, 'desvincular'])->middleware('auth:sanctum');
 Route::post('/telegram/webhook',       [TelegramController::class, 'webhook']);
 
 // Autenticadas

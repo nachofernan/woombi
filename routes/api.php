@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\PredictionController;
 use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\TelegramController;
 
 // Públicas
 Route::post('/login',    [AuthController::class, 'login']);
@@ -51,4 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/usuarios/buscar',        [UserController::class, 'buscar']);
     Route::post('/usuarios/buscar/mail',   [UserController::class, 'buscarPorMail']);
     Route::get('/usuarios/{id}',           [UserController::class, 'show']);
+
+    // Telegram
+    Route::get('/telegram/token',          [TelegramController::class, 'generarToken'])->middleware('auth:sanctum');
+    Route::post('/telegram/webhook',       [TelegramController::class, 'webhook']);
 });

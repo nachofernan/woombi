@@ -36,6 +36,7 @@ class User extends Authenticatable implements FilamentUser
         'role',
         'champion_team_id',
         'champion_updated_at',
+        'telegram_chat_id', 'telegram_token', 'telegram_token_expires_at', // 👈
     ];
 
     /**
@@ -73,6 +74,7 @@ class User extends Authenticatable implements FilamentUser
             'role' => 'string',
             'champion_team_id' => 'integer',
             'champion_updated_at' => 'datetime',
+            'telegram_token_expires_at'  => 'datetime', // 👈
         ];
     }
 

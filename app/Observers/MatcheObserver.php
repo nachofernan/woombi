@@ -95,6 +95,7 @@ class MatcheObserver
 
             $prediction->update(['points' => $pts]);
             $this->updatePoints($prediction);
+            $this->notificarTelegram($match, $prediction, $pts);
         }
 
         if ($match->stage === 'final') {
@@ -139,5 +140,31 @@ class MatcheObserver
             $total = $user->predictions()->sum('points') + $bonus;
             $user->update(['total_points' => $total]);
         }
+    }
+
+    private function notificarTelegram(Matche $match, Prediction $prediction, int $pts): void
+    {
+        $user = $prediction->user;
+
+        if (!$user->telegram_chat_id) return;
+
+        $telegram  = new \App\Services\TelegramService();
+        $home      = $match->homeTeam->name;
+        $away      = $match->awayTeam->name;
+        $resultado = "{$match->home_score} - {$match->away_score}";
+
+        if ($prediction->predicted_home_score === null) {
+            $telegram->sendMessage($user->telegram_chat_id,
+                "⚽ <b>{$home} {$resultado} {$away}</b>\n\n" .
+                "No tenías pronóstico cargado para este partido."
+            );
+            return;
+        }
+
+        $telegram->sendMessage($user->telegram_chat_id,
+            "⚽ <b>{$home} {$resultado} {$away}</b>\n\n" .
+            "Tu pronóstico: {$prediction->predicted_home_score} - {$prediction->predicted_away_score}\n" .
+            "Puntos obtenidos: <b>{$pts}</b>"
+        );
     }
 }

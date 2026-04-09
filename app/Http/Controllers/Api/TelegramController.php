@@ -86,17 +86,15 @@ class TelegramController extends Controller
         } else {
             // TODO: agregar mas comandos
             if (str_starts_with($text, '/desvincular')) {
-                $this->desvincular($request);
+                $user->update([
+                    'telegram_chat_id' => null,
+                ]);
                 $telegram->sendMessage($chatId, "✅ <b>¡Cuenta desvinculada!</b> A partir de ahora no te voy a avisar los resultados de los partidos.");
                 return response()->json(['ok' => true]);
             }
 
             // TODO: agregar mas comandos
             if (str_starts_with($text, '/puntos')) {
-                if (!$user) {
-                    $telegram->sendMessage($chatId, '❌ No tienes una cuenta de Telegram vinculada.');
-                    return response()->json(['ok' => true]);
-                }
                 $telegram->sendMessage($chatId, "✅ <b>¡Puntos!</b>");
                 $telegram->sendMessage($chatId, "Tu cuenta tiene {$user->total_points} puntos");
                 return response()->json(['ok' => true]);

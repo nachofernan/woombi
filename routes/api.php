@@ -13,6 +13,10 @@ use App\Http\Controllers\Api\TelegramController;
 Route::post('/login',    [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
+// Telegram
+Route::get('/telegram/token',          [TelegramController::class, 'generarToken'])->middleware('auth:sanctum');
+Route::post('/telegram/webhook',       [TelegramController::class, 'webhook']);
+
 // Autenticadas
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -53,7 +57,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/usuarios/buscar/mail',   [UserController::class, 'buscarPorMail']);
     Route::get('/usuarios/{id}',           [UserController::class, 'show']);
 
-    // Telegram
-    Route::get('/telegram/token',          [TelegramController::class, 'generarToken'])->middleware('auth:sanctum');
-    Route::post('/telegram/webhook',       [TelegramController::class, 'webhook']);
 });

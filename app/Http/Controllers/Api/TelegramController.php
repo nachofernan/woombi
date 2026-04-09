@@ -70,8 +70,9 @@ class TelegramController extends Controller
             $telegram->sendMessage($chatId, "✅ <b>¡Cuenta vinculada!</b> A partir de ahora te voy a avisar los resultados de los partidos.");
             $telegram->sendMessage($chatId, "<b>Pibeeeeeeee!! Tenemos Bot!</b> 🤖");
             $telegram->sendMessage($chatId, "Ahora andá a la administración y agregá un resultado para probar. 🏆");
-            $telegram->sendMessage($chatId, "Acordate que era en https://woombi.elbondi.online/ y usá a test@example.com -> password para entrar. 🎯");
+            $telegram->sendMessage($chatId, "Acordate que era en https://woombi.elbondi.online/ y usá a admin@prode.com -> password para entrar. 🎯");
             $telegram->sendMessage($chatId, "Besis 🥰");
+            $telegram->sendMessage($chatId, "Pd: acordate de poner el partido como \"finalizado\" 🤫");
             return response()->json(['ok' => true]);
         }
 

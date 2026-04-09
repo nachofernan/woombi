@@ -76,6 +76,40 @@ class TelegramController extends Controller
             return response()->json(['ok' => true]);
         }
 
+        // TODO: agregar mas comandos
+        if (str_starts_with($text, '/desvincular')) {
+            $this->desvincular($request);
+            $telegram->sendMessage($chatId, "✅ <b>¡Cuenta desvinculada!</b> A partir de ahora no te voy a avisar los resultados de los partidos.");
+            return response()->json(['ok' => true]);
+        }
+
+        // TODO: agregar mas comandos
+        if (str_starts_with($text, '/puntos')) {
+            $user = User::where('telegram_chat_id', $chatId)->first();
+            if (!$user) {
+                $telegram->sendMessage($chatId, '❌ No tienes una cuenta de Telegram vinculada.');
+                return response()->json(['ok' => true]);
+            }
+            $telegram->sendMessage($chatId, "✅ <b>¡Puntos!</b>");
+            $telegram->sendMessage($chatId, "Tu cuenta tiene {$user->total_points} puntos");
+            return response()->json(['ok' => true]);
+        }
+
+        $user = User::where('telegram_chat_id', $chatId)->first();
+        if (!$user) {
+            $telegram->sendMessage($chatId,
+                " 🤖 Para vincular tu cuenta, ingresá a la app, generá tu código y mandame:\n\n" .
+                "<code>/vincular 123456</code>"
+            );
+        } else {
+            $telegram->sendMessage($chatId, 
+                "Hola {$user->name}, ¿en qué te puedo ayudar? \n\n" .
+                "Podes usar los siguientes comandos:\n\n" .
+                "/puntos - Ver mis puntos\n\n" .
+                "/desvincular - Desvincular mi cuenta de Telegram"
+            );
+        }
+
         return response()->json(['ok' => true]);
     }
 

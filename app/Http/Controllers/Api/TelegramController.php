@@ -78,8 +78,8 @@ class TelegramController extends Controller
 
         // TODO: agregar mas comandos
         if (str_starts_with($text, '/desvincular')) {
-            $this->desvincular($request);
             $telegram->sendMessage($chatId, "✅ <b>¡Cuenta desvinculada!</b> A partir de ahora no te voy a avisar los resultados de los partidos.");
+            $this->desvincular($request);
             return response()->json(['ok' => true]);
         }
 

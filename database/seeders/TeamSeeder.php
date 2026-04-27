@@ -14,11 +14,11 @@ class TeamSeeder extends Seeder
             ['name' => 'México',            'fifa_code' => 'MEX',  'flag_url' => 'mx'],
             ['name' => 'Sudáfrica',         'fifa_code' => 'RSA',  'flag_url' => 'za'],
             ['name' => 'Corea del Sur',     'fifa_code' => 'KOR',  'flag_url' => 'kr'],
-            ['name' => 'Repechaje UEFA D',  'fifa_code' => 'PO4',  'flag_url' => null], // Dinamarca/Chequia/Macedonia/Irlanda
+            ['name' => 'República Checa',   'fifa_code' => 'CZE',  'flag_url' => 'cz'],
 
             // Grupo B
             ['name' => 'Canadá',            'fifa_code' => 'CAN',  'flag_url' => 'ca'],
-            ['name' => 'Repechaje UEFA A',  'fifa_code' => 'PO1',  'flag_url' => null], // Italia/Irlanda del Norte/Gales/Bosnia
+            ['name' => 'Bosnia',            'fifa_code' => 'BIH',  'flag_url' => 'ba'],
             ['name' => 'Qatar',             'fifa_code' => 'QAT',  'flag_url' => 'qa'],
             ['name' => 'Suiza',             'fifa_code' => 'SUI',  'flag_url' => 'ch'],
 
@@ -32,7 +32,7 @@ class TeamSeeder extends Seeder
             ['name' => 'Estados Unidos',    'fifa_code' => 'USA',  'flag_url' => 'us'],
             ['name' => 'Paraguay',          'fifa_code' => 'PAR',  'flag_url' => 'py'],
             ['name' => 'Australia',         'fifa_code' => 'AUS',  'flag_url' => 'au'],
-            ['name' => 'Repechaje UEFA C',  'fifa_code' => 'PO3',  'flag_url' => null], // Turquía/Rumanía/Eslovaquia/Kosovo
+            ['name' => 'Turquía',           'fifa_code' => 'TUR',  'flag_url' => 'tr'],
 
             // Grupo E
             ['name' => 'Alemania',          'fifa_code' => 'GER',  'flag_url' => 'de'],
@@ -43,7 +43,7 @@ class TeamSeeder extends Seeder
             // Grupo F
             ['name' => 'Países Bajos',      'fifa_code' => 'NED',  'flag_url' => 'nl'],
             ['name' => 'Japón',             'fifa_code' => 'JPN',  'flag_url' => 'jp'],
-            ['name' => 'Repechaje UEFA B',  'fifa_code' => 'PO2',  'flag_url' => null], // Ucrania/Suecia/Polonia/Albania
+            ['name' => 'Suecia',            'fifa_code' => 'SWE',  'flag_url' => 'se'],
             ['name' => 'Túnez',             'fifa_code' => 'TUN',  'flag_url' => 'tn'],
 
             // Grupo G
@@ -62,7 +62,7 @@ class TeamSeeder extends Seeder
             ['name' => 'Francia',           'fifa_code' => 'FRA',  'flag_url' => 'fr'],
             ['name' => 'Noruega',           'fifa_code' => 'NOR',  'flag_url' => 'no'],
             ['name' => 'Senegal',           'fifa_code' => 'SEN',  'flag_url' => 'sn'],
-            ['name' => 'Repechaje FIFA 2',  'fifa_code' => 'RF2',  'flag_url' => null], // Bolivia/Surinam/Irak
+            ['name' => 'Irak',              'fifa_code' => 'IRQ',  'flag_url' => 'iq'],
 
             // Grupo J
             ['name' => 'Argentina',         'fifa_code' => 'ARG',  'flag_url' => 'ar'],
@@ -72,7 +72,7 @@ class TeamSeeder extends Seeder
 
             // Grupo K
             ['name' => 'Portugal',          'fifa_code' => 'POR',  'flag_url' => 'pt'],
-            ['name' => 'Repechaje FIFA 1',  'fifa_code' => 'RF1',  'flag_url' => null], // RD Congo/Jamaica/Nueva Caledonia
+            ['name' => 'RD Congo',          'fifa_code' => 'COD',  'flag_url' => 'cd'],
             ['name' => 'Uzbekistán',        'fifa_code' => 'UZB',  'flag_url' => 'uz'],
             ['name' => 'Colombia',          'fifa_code' => 'COL',  'flag_url' => 'co'],
 

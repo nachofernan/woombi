@@ -11,17 +11,17 @@ class GroupTeamSeeder extends Seeder
     public function run(): void
     {
         $assignments = [
-            'A' => ['MEX', 'RSA', 'KOR', 'PO4'],
-            'B' => ['CAN', 'PO1', 'QAT', 'SUI'],
+            'A' => ['MEX', 'RSA', 'KOR', 'CZE'],
+            'B' => ['CAN', 'BIH', 'QAT', 'SUI'],
             'C' => ['BRA', 'MAR', 'HAI', 'SCO'],
-            'D' => ['USA', 'PAR', 'AUS', 'PO3'],
+            'D' => ['USA', 'PAR', 'AUS', 'TUR'],
             'E' => ['GER', 'CUW', 'CIV', 'ECU'],
-            'F' => ['NED', 'JPN', 'PO2', 'TUN'],
+            'F' => ['NED', 'JPN', 'SWE', 'TUN'],
             'G' => ['BEL', 'EGY', 'IRN', 'NZL'],
             'H' => ['ESP', 'CPV', 'KSA', 'URU'],
-            'I' => ['FRA', 'NOR', 'SEN', 'RF2'],
+            'I' => ['FRA', 'NOR', 'SEN', 'IRQ'],
             'J' => ['ARG', 'ALG', 'AUT', 'JOR'],
-            'K' => ['POR', 'RF1', 'UZB', 'COL'],
+            'K' => ['POR', 'COD', 'UZB', 'COL'],
             'L' => ['ENG', 'CRO', 'GHA', 'PAN'],
         ];
 

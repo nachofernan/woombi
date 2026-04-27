@@ -18,7 +18,7 @@ class MatcheSeeder extends Seeder
         $matches = [
 
             // -------------------------
-            // GRUPO A: México, Sudáfrica, Corea del Sur, PO4
+            // GRUPO A: México, Sudáfrica, Corea del Sur, CZE
             // -------------------------
             [
                 'match_number'        => 1,
@@ -32,7 +32,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 2,
                 'tournament_group_id' => $group('A'),
                 'home_team_id'        => $team('KOR'),
-                'away_team_id'        => $team('PO4'),
+                'away_team_id'        => $team('CZE'),
                 'match_date'          => '2026-06-11 23:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -40,7 +40,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 13,
                 'tournament_group_id' => $group('A'),
                 'home_team_id'        => $team('RSA'),
-                'away_team_id'        => $team('PO4'),
+                'away_team_id'        => $team('CZE'),
                 'match_date'          => '2026-06-18 13:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -64,19 +64,19 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 26,
                 'tournament_group_id' => $group('A'),
                 'home_team_id'        => $team('MEX'),
-                'away_team_id'        => $team('PO4'),
+                'away_team_id'        => $team('CZE'),
                 'match_date'          => '2026-06-24 22:00:00',
                 'stage'               => 'fase_grupos',
             ],
 
             // -------------------------
-            // GRUPO B: Canadá, PO1, Qatar, Suiza
+            // GRUPO B: Canadá, BIH, Qatar, Suiza
             // -------------------------
             [
                 'match_number'        => 3,
                 'tournament_group_id' => $group('B'),
                 'home_team_id'        => $team('CAN'),
-                'away_team_id'        => $team('PO1'),
+                'away_team_id'        => $team('BIH'),
                 'match_date'          => '2026-06-12 16:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -92,7 +92,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 15,
                 'tournament_group_id' => $group('B'),
                 'home_team_id'        => $team('SUI'),
-                'away_team_id'        => $team('PO1'),
+                'away_team_id'        => $team('BIH'),
                 'match_date'          => '2026-06-18 16:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -116,7 +116,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 28,
                 'tournament_group_id' => $group('B'),
                 'home_team_id'        => $team('QAT'),
-                'away_team_id'        => $team('PO1'),
+                'away_team_id'        => $team('BIH'),
                 'match_date'          => '2026-06-24 16:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -174,7 +174,7 @@ class MatcheSeeder extends Seeder
             ],
 
             // -------------------------
-            // GRUPO D: Estados Unidos, Paraguay, Australia, PO3
+            // GRUPO D: Estados Unidos, Paraguay, Australia, TUR
             // -------------------------
             [
                 'match_number'        => 4,
@@ -188,7 +188,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 10,
                 'tournament_group_id' => $group('D'),
                 'home_team_id'        => $team('AUS'),
-                'away_team_id'        => $team('PO3'),
+                'away_team_id'        => $team('TUR'),
                 'match_date'          => '2026-06-14 01:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -204,7 +204,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 18,
                 'tournament_group_id' => $group('D'),
                 'home_team_id'        => $team('PAR'),
-                'away_team_id'        => $team('PO3'),
+                'away_team_id'        => $team('TUR'),
                 'match_date'          => '2026-06-20 01:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -220,7 +220,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 32,
                 'tournament_group_id' => $group('D'),
                 'home_team_id'        => $team('USA'),
-                'away_team_id'        => $team('PO3'),
+                'away_team_id'        => $team('TUR'),
                 'match_date'          => '2026-06-25 23:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -278,7 +278,7 @@ class MatcheSeeder extends Seeder
             ],
 
             // -------------------------
-            // GRUPO F: Países Bajos, Japón, PO2, Túnez
+            // GRUPO F: Países Bajos, Japón, SWE, Túnez
             // -------------------------
             [
                 'match_number'        => 5,
@@ -292,7 +292,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 6,
                 'tournament_group_id' => $group('F'),
                 'home_team_id'        => $team('TUN'),
-                'away_team_id'        => $team('PO2'),
+                'away_team_id'        => $team('SWE'),
                 'match_date'          => '2026-06-14 23:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -300,7 +300,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 23,
                 'tournament_group_id' => $group('F'),
                 'home_team_id'        => $team('NED'),
-                'away_team_id'        => $team('PO2'),
+                'away_team_id'        => $team('SWE'),
                 'match_date'          => '2026-06-20 14:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -316,7 +316,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 35,
                 'tournament_group_id' => $group('F'),
                 'home_team_id'        => $team('JPN'),
-                'away_team_id'        => $team('PO2'),
+                'away_team_id'        => $team('SWE'),
                 'match_date'          => '2026-06-25 20:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -434,7 +434,7 @@ class MatcheSeeder extends Seeder
             ],
 
             // -------------------------
-            // GRUPO I: Francia, Senegal, RF2, Noruega
+            // GRUPO I: Francia, Senegal, IRQ, Noruega
             // -------------------------
             [
                 'match_number'        => 41,
@@ -447,7 +447,7 @@ class MatcheSeeder extends Seeder
             [
                 'match_number'        => 42,
                 'tournament_group_id' => $group('I'),
-                'home_team_id'        => $team('RF2'),
+                'home_team_id'        => $team('IRQ'),
                 'away_team_id'        => $team('NOR'),
                 'match_date'          => '2026-06-16 19:00:00',
                 'stage'               => 'fase_grupos',
@@ -456,7 +456,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 47,
                 'tournament_group_id' => $group('I'),
                 'home_team_id'        => $team('FRA'),
-                'away_team_id'        => $team('RF2'),
+                'away_team_id'        => $team('IRQ'),
                 'match_date'          => '2026-06-22 18:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -480,7 +480,7 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 54,
                 'tournament_group_id' => $group('I'),
                 'home_team_id'        => $team('SEN'),
-                'away_team_id'        => $team('RF2'),
+                'away_team_id'        => $team('IRQ'),
                 'match_date'          => '2026-06-26 16:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -538,13 +538,13 @@ class MatcheSeeder extends Seeder
             ],
 
             // -------------------------
-            // GRUPO K: Portugal, RF1, Uzbekistán, Colombia
+            // GRUPO K: Portugal, COD, Uzbekistán, Colombia
             // -------------------------
             [
                 'match_number'        => 57,
                 'tournament_group_id' => $group('K'),
                 'home_team_id'        => $team('POR'),
-                'away_team_id'        => $team('RF1'),
+                'away_team_id'        => $team('COD'),
                 'match_date'          => '2026-06-17 14:00:00',
                 'stage'               => 'fase_grupos',
             ],
@@ -568,14 +568,14 @@ class MatcheSeeder extends Seeder
                 'match_number'        => 64,
                 'tournament_group_id' => $group('K'),
                 'home_team_id'        => $team('COL'),
-                'away_team_id'        => $team('RF1'),
+                'away_team_id'        => $team('COD'),
                 'match_date'          => '2026-06-23 23:00:00',
                 'stage'               => 'fase_grupos',
             ],
             [
                 'match_number'        => 69,
                 'tournament_group_id' => $group('K'),
-                'home_team_id'        => $team('RF1'),
+                'home_team_id'        => $team('COD'),
                 'away_team_id'        => $team('UZB'),
                 'match_date'          => '2026-06-27 19:00:00',
                 'stage'               => 'fase_grupos',

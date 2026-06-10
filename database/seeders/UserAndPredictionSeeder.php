@@ -15,9 +15,9 @@ class UserAndPredictionSeeder extends Seeder
         // Usuarios de prueba
         $users = [
             ['name' => 'Admin',   'email' => 'admin@prode.com',   'password' => Hash::make('password'), 'role' => 'admin', 'total_points' => 0],
-            ['name' => 'Juan',    'email' => 'juan@prode.com',    'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
-            ['name' => 'María',   'email' => 'maria@prode.com',   'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
-            ['name' => 'Carlos',  'email' => 'carlos@prode.com',  'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
+            // ['name' => 'Juan',    'email' => 'juan@prode.com',    'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
+            // ['name' => 'María',   'email' => 'maria@prode.com',   'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
+            // ['name' => 'Carlos',  'email' => 'carlos@prode.com',  'password' => Hash::make('password'), 'role' => 'jugador', 'total_points' => 0],
         ];
 
         foreach ($users as $userData) {
@@ -33,8 +33,8 @@ class UserAndPredictionSeeder extends Seeder
                 Prediction::create([
                     'user_id'              => $user->id,
                     'match_id'             => $match->id,
-                    'predicted_home_score' => rand(0, 4),
-                    'predicted_away_score' => rand(0, 4),
+                    'predicted_home_score' => null, //rand(0, 4),
+                    'predicted_away_score' => null, //rand(0, 4),
                     'points'               => null,
                 ]);
             }

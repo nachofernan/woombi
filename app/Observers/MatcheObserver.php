@@ -153,10 +153,14 @@ class MatcheObserver
         $away      = $match->awayTeam->name;
         $resultado = "{$match->home_score} - {$match->away_score}";
 
+        $user->refresh();
+        $totalPts = $user->total_points;
+
         if ($prediction->predicted_home_score === null) {
             $telegram->sendMessage($user->telegram_chat_id,
                 "⚽ <b>{$home} {$resultado} {$away}</b>\n\n" .
-                "No tenías pronóstico cargado para este partido."
+                "No tenías pronóstico cargado para este partido.\n" .
+                "Total de puntos: <b>{$totalPts}</b>"
             );
             return;
         }
@@ -164,7 +168,8 @@ class MatcheObserver
         $telegram->sendMessage($user->telegram_chat_id,
             "⚽ <b>{$home} {$resultado} {$away}</b>\n\n" .
             "Tu pronóstico: {$prediction->predicted_home_score} - {$prediction->predicted_away_score}\n" .
-            "Puntos obtenidos: <b>{$pts}</b>"
+            "Puntos obtenidos: <b>{$pts}</b>\n" .
+            "Total de puntos: <b>{$totalPts}</b>"
         );
     }
 }

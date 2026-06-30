@@ -78,12 +78,13 @@ class MatcheObserver
 
             // Bonus +2
             $isPredictedDraw = $predictedResult === 'draw';
+            $predictedWinnerTeamId = $isPredictedDraw
+                ? $prediction->predicted_winner_team_id
+                : $this->predictedWinner($prediction, $match);
+
             $quienPasaAcertado = $match->stage !== 'fase_grupos'
                 && $winner
-                && (
-                    (!$isPredictedDraw && $predictedResult === ($actualResult))
-                    || ($isPredictedDraw && $prediction->predicted_winner_team_id === $winner->id)
-                );
+                && $predictedWinnerTeamId === $winner->id;
 
             if (
                 // En caso de querer que los grupos también tengan bonus: descomenta la siguiente línea

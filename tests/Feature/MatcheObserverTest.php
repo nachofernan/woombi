@@ -156,6 +156,22 @@ test('empate con penalty winner errado en fase media suma 8 puntos', function ()
     expect($user->fresh()->total_points)->toBe(8); // 2+2+4, sin bonus
 });
 
+test('pronosticó ganador claro y acertó quién pasa por penales tras empate en fase media suma 2 puntos', function () {
+    $match = Matche::where('stage', 'dieciseisavos')->first();
+    $match->update(['home_team_id' => Team::first()->id, 'away_team_id' => Team::skip(1)->first()->id]);
+
+    // Pronosticó que ganaba el local sin empate (2-0), no marcó empate ni predicted_winner_team_id
+    $user = crearUsuarioConPrediccion($match, [
+        'predicted_home_score' => 2,
+        'predicted_away_score' => 0,
+    ]);
+
+    // El partido termina 1-1 y el local gana por penales: acertó quién pasa, pero no el resultado ni el score
+    finalizarPartido($match, 1, 1, $match->home_team_id);
+
+    expect($user->fresh()->total_points)->toBe(2); // solo bonus quien pasa (2), sin score/resultado
+});
+
 // -------------------------------------------------------
 // FASE FINAL (semis)
 // -------------------------------------------------------
